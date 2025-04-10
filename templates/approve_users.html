@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve Users | Supervisor Panel</title>
+    <link rel="stylesheet" href="/static/approve_users.css">
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-left">
+            <img src="/static/logo.png" alt="Logo" class="logo">
+            <h1>Approve Users</h1>
+        </div>
+        <nav class="dashboard-nav">
+            <a href="/view" class="nav-link">View Opportunities</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </nav>
+    </header>
+
+    <main class="content-wrapper">
+        <h2 class="section-title">Pending Approvals</h2>
+        <div class="table-wrapper">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>
+                            <form method="POST" class="approval-form">
+                                <input type="hidden" name="user_id" value="{{ user.id }}">
+                                <div class="action-buttons">
+                                    <button type="submit" name="action" value="approve" class="btn btn-approve">Approve</button>
+                                    <button type="submit" name="action" value="reject" class="btn btn-reject">Reject</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

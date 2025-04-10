@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Submissions | Supervisor Panel</title>
+    <link rel="stylesheet" href="/static/view.css">
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-left">
+            <img src="/static/logo.png" alt="Logo" class="logo">
+            <h1>Opportunity Submissions</h1>
+        </div>
+        <nav class="dashboard-nav">
+            <a href="{{ url_for('approve_users') }}" class="nav-link">Approve Signup Requests</a>
+            <a href="/dashboard" class="nav-link">View Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </nav>
+    </header>    
+
+    <main class="content-wrapper">
+        <div class="projects-container">
+            <h2 class="section-title">User Profile</h2>
+ <!-- Add this filter section -->
+            <div class="filter-section">
+                <label for="user-search">Search by Name or Email:</label>
+                <input type="text" id="user-search" placeholder="Type name or email...">
+            </div>
+            <div class="table-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            {% for user in users %}
+                            <tr>
+                                <td class="user-username">{{ user.username }}</td>
+                                <td class="user-name">{{ user.name }}</td>
+                                <td class="user-email">{{ user.email }}</td>
+                                <td>{{ user.password }}</td>
+                                <td>{{ user.role }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </main>
+
+    <script>
+    const searchInput = document.getElementById('user-search');
+    const userRows = document.querySelectorAll('#user-table-body tr');
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+
+        userRows.forEach(row => {
+            const username = row.querySelector('.user-username').textContent.toLowerCase();
+            const name = row.querySelector('.user-name').textContent.toLowerCase();
+            const email = row.querySelector('.user-email').textContent.toLowerCase();
+
+            if (name.includes(query) || email.includes(query) || username.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

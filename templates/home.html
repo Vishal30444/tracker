@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit New Opportunity</title>
+    <link rel="stylesheet" href="/static/home.css">
+</head>
+
+<body>
+    <header class="dashboard-header">
+        <div class="header-left">
+            <img src="/static/logo.png" alt="Logo" class="logo">
+            <h1>Opportunity Submission</h1>
+        </div>
+        <nav class="dashboard-nav">
+            <a href="/view" class="nav-link">View Opportunities</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Submit New Opportunity</h2>
+
+        <!-- Success Message -->
+     
+
+        <form method="POST">
+            <div class="input-group">
+                <label>Thematic Area: <span class="required">*</span></label>
+                <select name="thematic_area" required>
+                    <option value="">Select</option>
+                    <option>Climate Change Adaption and Resilience Planning</option>
+                    <option>Climate Resilient Infrastructure Designs</option>
+                    <option>Mitigating Climate Change Through Low Carbon Pathways</option>
+                    <option>Mainstreaming Climate in Policy Plans and Programmes</option>
+                    <option>Disaster Risk Reduction and Promotion of Nature Based Solutions</option>
+                    <option>Gender Mainstreaming in ECC Policies and Programmes</option>
+                    <option>Climate Smart Cities</option>
+                    <option>Mainstreaming Climate Action for Sustainable Tourism</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Opportunity Title: <span class="required">*</span></label>
+                <input type="text" name="project_title" placeholder="" required>
+            </div>
+
+            <div class="input-group">
+                <label>Region: <span class="required">*</span></label>
+                <select name="continent" required>
+                    <option value="">Select</option>
+                    <option>South Asia</option>
+                    <option>South-East Asia</option>
+                    <option>Pacific's</option>
+                    <option>Africa</option>
+
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Country: <span class="required">*</span></label>
+                <select  id="country" name="country" required onchange="toggleOtherField(this)">
+                    <option value="">Select</option>
+                    <option>India</option>
+                    <option>USA</option>
+                    <option>China</option>
+                    <option>Russia</option>
+                    <option value="others">others</option>
+                </select>
+                <div  class="other-input" style="display: none;">
+                    <label>Specify Country:</label>
+                    <input type="text" name="country_other" placeholder="">
+                </div>
+            </div>
+
+         
+            <div class="input-group">
+                <label>City/State:</label>
+                <input type="text" name="city_state" placeholder="City/State" required>
+            </div>
+            <div class="input-group">
+                <label>Funding Agency: <span class="required">*</span></label>
+                <select name="funding_agency" required onchange="toggleOtherField(this)">
+                    <option value="">Select</option>
+                    <option>WB - Administrative</option>
+                    <option>WB - Project</option>
+                    <option>UNDP</option>
+                    <option>ADB</option>
+                    <option>AfDB</option>
+                    <option>AFD</option>
+                    <option>JICA</option>
+                    <option>IFC</option>
+                    <option>GIZ</option>
+                    <option>GGGI</option>
+                    <option>Pipelines</option>
+                    <option>CDRI</option>
+                    <option>C40</option>
+                    <option>NIUA</option>
+                    <option>Devex</option>
+                    <option>Development aid</option>
+                    <option>Devnet</option>
+                    <option>UNGM</option>
+                    <option>FCDO</option>
+                    <option>USAID</option>
+                    <option>The Africa Capacity Building Foundation</option>
+                    <option>European Union</option>
+                    <option>GCF</option>
+                    <option>GCA</option>
+                    <option>Bill and Melinda Gates Foundation</option>
+                    <option>Rockefeller Foundation</option>
+                    <option>McArthur Foundation</option>
+                    <option>Ford Foundation</option>
+                    <option>IKEA Foundation</option>
+                    <option>King Badauoin Foundation</option>
+                    <option>GEM</option>
+                    <option>Eprocure - Punjab</option>
+                    <option>Eprocure - Haryana</option>
+                    <option>Eprocure - Karnataka</option>
+                    <option>Eprocure - Tamil Nadu</option>
+                    <option>Eprocure - Rajasthan</option>
+                    <option>Eprocure - Gujarat</option>
+                    <option>Eprocure - Jharkhand</option>
+                    <option>Eprocure - Bihar</option>
+                    <option>Eprocure - UP</option>
+                    <option>Eprocure - MP</option>
+                    <option>Eprocure - Chhattisgarh</option>
+                    <option>Eprocure - Odisha</option>
+                    <option>Eprocure - Assam</option>
+                    <option>Eprocure - Meghalaya</option>
+                    <option value="others">Other</option>
+                </select>
+                <div  class="other-input" style="display: none;">
+                    <label>Specify:</label>
+                    <input type="text" name="funding_agency_other" placeholder="">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Final funder:</label>
+                <input type="text" name="final_funder" placeholder="Final funder" required>
+            </div>
+
+            <div class="input-group">
+                <label>Procurement Type: <span class="required">*</span></label>
+                <select name="type_of_procurement" required onchange="toggleOtherField(this)">
+                    <option value="">Select</option>
+                    <option>RfP</option>
+                    <option>EOI</option>
+                    <option>Concept Notes</option>
+                    <option value="others">Other</option>
+                </select>
+                <div  class="other-input" style="display: none;">
+                    <label>Specify :</label>
+                    <input type="text" name="type_of_procurement_other" placeholder="">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Budget: <span class="required">*</span></label>
+                <input type="text" name="currency_type" placeholder="Currency Type" required>
+                <input type="text" name="budget" placeholder="Budget Currency (2 Crore)" required>
+            </div>
+
+            <div class="input-group">
+                <label>Opportunity Published Date: <span class="required">*</span></label>
+                <input type="date" name="opportunity_published_date" required>
+            </div>
+
+            <!-- <div class="input-group">
+                <label>Bid Date: <span class="required">*</span></label>
+                <input type="date" name="bid_date" required>
+            </div> -->
+
+            <div class="input-group">
+                <label>Deadline: <span class="required">*</span></label>
+                <input type="date" name="deadline" required>
+            </div>
+
+            <div class="input-group">
+                <label>Duration (Months): <span class="required">*</span></label>
+                <select name="project_duration" required onchange="toggleOtherField(this)">
+                    <option value="">Select</option>
+                    {% for i in range(1, 25) %}
+                    <option>{{ i }}</option>
+                    {% endfor %}
+                    <option value="others">>24</option>
+                </select>
+                <div  class="other-input" style="display: none;">
+                    <label>Specify duration:</label>
+                    <input type="text" name="project_duration_other" placeholder="months">
+                </div>
+                
+            </div>
+
+            <div class="input-group">
+                <label>Team Requirement: <span class="required">*</span></label>
+                    <label>Key Expert: 
+                        <span class="required">
+                                <input type="text" name="key_expert" placeholder="key expert" required>
+                        </span>
+                    </label>
+                    <label>Non-Key Expert: 
+                        <span class="required">
+                                <input type="text" name="non_key_expert" placeholder="non key expert" required>
+                        </span>
+                    </label>
+          
+                <!-- <select name="team_requirement" required>
+                    <option value="">Select</option>
+                    {% for i in range(1, 11) %}
+                    <option>{{ i }}</option>
+                    {% endfor %}
+                    <option>>10</option>
+                </select> -->
+            </div>
+
+            <div class="input-group">
+                <label>Proposed Contract Type: <span class="required">*</span></label>
+                <select name="proposed_contract_type" required onchange="toggleOtherField(this)">
+                    <option value="">Select</option>
+                    <option>Input based</option>
+                    <option>Deliverable based</option>
+                    <option value="others">Other</option>
+                </select>
+                <div  class="other-input" style="display: none;">
+                    <label>Specify :</label>
+                    <input type="text" name="proposed_contract_type_other" placeholder="">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Scope Of Work: <span class="required">*</span></label>
+                <textarea name="objectives" rows="3" required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Link: <span class="required">*</span></label>
+                <input type="url" name="links" placeholder="https://example.com">
+            </div>
+
+            <div class="input-group">
+                <label>Tracker Recommendations: <span class="required">*</span></label>
+                <textarea name="comments" rows="2" required></textarea>
+            </div>
+
+            <button type="submit">Submit Opportunity</button>
+        </form>
+    </div>
+    <script>
+         function toggleOtherField(selectElement) {
+        var otherDiv = selectElement.parentElement.querySelector(".other-input"); // Get the corresponding div
+        
+        if (selectElement.value === "others") {
+            otherDiv.style.display = "block"; // Show input field
+        } else {
+            otherDiv.style.display = "none"; // Hide input field
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Supervisor Panel</title>
+  <link rel="stylesheet" href="/static/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-left">
+      <img src="/static/logo.png" alt="VectorLab Logo" class="logo">
+      <h1>Dashboard</h1>
+    </div>
+    <nav class="dashboard-nav">
+      <a href="/view" class="nav-link">View Opportunities</a>
+      <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </nav>
+  </header>
+
+  <main class="content-wrapper">
+
+    <!-- 🔍 Filter Section -->
+    <div class="filter-section">
+      <form method="get" action="{{ url_for('dashboard') }}">
+        <select name="username">
+            <option value="">All Users</option>
+            {% for name in unique_submitters %}
+                <option value="{{ name }}" {% if request.args.get('username') == name %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    
+        <input type="date" name="start_date" value="{{ request.args.get('start_date', '') }}">
+        <input type="date" name="end_date" value="{{ request.args.get('end_date', '') }}">
+        <button type="submit">Filter</button>
+        <button type="button" onclick="window.location.href='{{ url_for('dashboard') }}'" style="margin-left: 10px;">
+          Reset Filters
+        </button>
+
+    </form>
+    </div>
+
+    <!-- 📊 Metrics -->
+    <section class="metrics">
+      <div class="metric-card">
+        <h3>Total Projects Submitted</h3>
+        <p>{{ data.total_projects }}</p>
+      </div>
+    </section>
+    <section class="metrics"> 
+      <div class="metric-card">
+        <h3>Manager Pending</h3>
+        <p>{{ data.manager_pending }}</p>
+      </div>
+      <div class="metric-card">
+        <h3>Supervisor Pending</h3>
+        <p>{{ data.supervisor_pending }}</p>
+      </div>
+    </section>
+    <section class="metrics">  
+      <div class="metric-card">
+        <h3>Manager Approved</h3>
+        <p>{{ data.manager_approved  }}</p>
+      </div>
+      <div class="metric-card">
+        <h3>Supervisor Approved</h3>
+        <p>{{ data.supervisor_approved  }}</p>
+      </div>
+    </section>
+    <section class="metrics">  
+      <div class="metric-card">
+        <h3>Manager rejected</h3>
+        <p>{{ data.manager_rejected }}</p>
+      </div>
+      <div class="metric-card">
+        <h3>Supervisor rejected</h3>
+        <p>{{ data.supervisor_rejected }}</p>
+      </div>
+    </section>
+
+    <!-- 📈 Charts -->
+
+
+  <!-- Chart Scripts -->
+  
+</body>
+</html>

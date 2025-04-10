@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Submissions | Supervisor Panel</title>
+    <link rel="stylesheet" href="/static/view.css">
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-left">
+            <img src="/static/logo.png" alt="Logo" class="logo">
+            <h1>Opportunity Submissions</h1>
+        </div>
+        <nav class="dashboard-nav">
+            {% if user_role == 'supervisor' %}
+                <a href="{{ url_for('approve_users') }}" class="nav-link">Approve Signup Requests</a>
+                <a href="/userprofile"class="nav-link">User Profile</a>
+                <a href="/dashboard" class="nav-link">View Dashboard</a>
+            {% endif %}
+            {% if user_role == 'normal' %}
+                <a href="{{ url_for('home') }}" class="nav-link">Submit Opportunity</a>
+            {% endif %}
+            <button id="export-csv" class="btn btn-export">Export Filtered CSV</button>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </nav>
+        
+    </header>    
+
+    <main class="content-wrapper">
+        <div class="projects-container">
+            <h2 class="section-title">Submitted Projects</h2>
+ <!-- Add this filter section -->
+ <div class="filter-section">
+    <label for="submitter-filter">Filter by Submitter:</label>
+    <select id="submitter-filter">
+        <option value="all">Show All</option>
+        {% for name in unique_submitters %}
+            <option value="{{ name }}">{{ name }}</option>
+        {% endfor %}
+    </select>
+    <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date">
+    <label for="end-date">End Date:</label>
+        <input type="date" id="end-date">
+    <label for="funding-filter">Filter by Funding Agency:</label>
+        <select id="funding-filter">
+            <option value="all">Show All</option>
+            {% for agency in unique_funding_agencies %}
+                <option value="{{ agency }}">{{ agency }}</option>
+            {% endfor %}
+        </select>
+        <button id="clear-filters" class="btn btn-clear">Clear All Filters</button>
+    
+</div>
+            <div class="table-wrapper">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Submitted By</th>
+                            <th>Date</th>
+                            <th>Thematic Area</th>
+                            <th>Opportunity Title</th>
+                            <th>Region</th>
+                            <th>Country</th>
+                            <th>City/State</th>
+                            <th>Funding Agency</th>
+                            <th>Final Funder</th>
+                            <th>Procurement Type</th>
+                            <th>Budget</th>
+                            <th>Opportunity Published Date</th>
+                            <th>Deadline</th>
+                            <th>Duration</th>
+                            <th>Team Requirement</th>
+                            <th>Proposed Contract Type</th>
+                            <th>Scope of Work</th>
+                            <th>Links</th>
+                            <th>Tracker Recommendations</th>
+                            {% if user_role != 'normal' %}
+                                <th>Manager Status</th>
+                                <th>Manager Comments</th>
+                            {% endif %}
+                            {% if user_role == 'supervisor' %}
+                                <th>Supervisor Status</th>
+                                <th>Supervisor Comments</th>
+                                <th>Final Approval</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td class="submitter-name">{{ users[project.created_by] }}</td>
+                            <td>{{ project.created_on }}</td>
+                            <td>{{ project.thematic_area }}</td>
+                            <td>{{ project.project_title }}</td>
+                            <td>{{ project.continent }}</td>
+                            <td>{{ project.country }}</td>
+                            <td>{{ project.city_state }}</td>
+                            <td>{{ project.funding_agency }}</td>
+                            <td>{{ project.final_funder }}</td>
+                            <td>{{ project.type_of_procurement }}</td>
+                            <td>{{ project.budget }} {{project.currency_type}}</td>
+                            <td>{{ project.opportunity_published_date }}</td>
+                            <td>{{ project.deadline }}</td>
+                            <td>{{ project.project_duration }}</td>
+                            <td>KEY EXP: {{ project.key_expert }}<br>NON KEY EXP:{{project.non_key_expert}}</td>
+                            <td>{{ project.proposed_contract_type }}</td>
+                            <td>{{ project.objectives }}</td>
+                            <td><a href="{{ project.links }}" class="project-link" target="_blank">View</a></td>
+                            <td>{{ project.comments }}</td>
+
+                            {% if user_role == 'manager' or user_role == 'supervisor' %}
+                                <td>{{ project.manager_status }}</td>
+                                <td>{{ project.manager_comments }}</td>
+                            {% endif %}
+
+                            {% if user_role == 'supervisor' %}
+                                <td>{{ project.supervisor_status }}</td>
+                                <td>{{ project.supervisor_comments }}</td>
+                            {% endif %}
+
+                            {% if user_role != 'normal' %}
+                                <td>
+                                    <form method="POST" class="approval-form">
+                                        <input type="hidden" name="project_id" value="{{ project.id }}">
+                                        <textarea name="comments" class="form-input" placeholder="Add comments" required></textarea>
+                                        <div class="action-buttons">
+                                            <button type="submit" name="action" value="approve" class="btn btn-approve">Approve</button>
+                                            <button type="submit" name="action" value="reject" class="btn btn-reject">Reject</button>
+                                        </div>
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const submitterFilter = document.getElementById('submitter-filter');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const fundingFilter = document.getElementById('funding-filter');
+        const rows = document.querySelectorAll('tbody tr');
+
+        submitterFilter.addEventListener('change', applyFilters);
+        startDateInput.addEventListener('change', applyFilters);
+        endDateInput.addEventListener('change', applyFilters);
+        fundingFilter.addEventListener('change', applyFilters);
+        function applyFilters() {
+            const selectedSubmitter = submitterFilter.value;
+            const selectedFunding = fundingFilter.value;
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            rows.forEach(row => {
+                const nameCell = row.querySelector('.submitter-name');
+                const dateCell = row.children[1]; // Date column
+                const fundingCell = row.children[7]; // Funding agency column
+
+                const rowName = nameCell.textContent.trim();
+                const rowDate = dateCell.textContent.trim().slice(0, 10); // Just 'YYYY-MM-DD'
+                const rowFunding = fundingCell.textContent.trim();
+
+                const matchSubmitter = selectedSubmitter === 'all' || rowName === selectedSubmitter;
+                const matchFunding = selectedFunding === 'all' || rowFunding === selectedFunding;
+
+                let matchDate = true;
+                if (startDate && rowDate < startDate) matchDate = false;
+                if (endDate && rowDate > endDate) matchDate = false;
+
+                if (matchSubmitter && matchFunding && matchDate) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    const clearButton = document.getElementById('clear-filters');
+
+    clearButton.addEventListener('click', function () {
+        submitterFilter.value = 'all';
+        startDateInput.value = '';
+        endDateInput.value = '';
+        fundingFilter.value = 'all';
+        applyFilters();
+    });
+
+    document.getElementById('export-csv').addEventListener('click', () => {
+    const rows = document.querySelectorAll('tbody tr');
+    const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+
+    if (visibleRows.length === 0) {
+        alert('No data to export based on current filters!');
+        return;
+    }
+
+    const headers = Array.from(document.querySelectorAll('thead th')).map(th => th.innerText.trim());
+    let csvContent = headers.join(',') + '\n';
+
+    visibleRows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td')).map(cell => {
+            const text = cell.innerText.trim().replace(/\n/g, ' ').replace(/,/g, ';');
+            return `"${text}"`; // wrap to handle commas inside values
+        });
+        csvContent += cells.join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'filtered_projects.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+    </script>
+</body>
+</html>
