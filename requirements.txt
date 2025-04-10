@@ -6,3 +6,4 @@ wtforms
 python-dotenv
 Werkzeug
 gunicorn
+pytz
